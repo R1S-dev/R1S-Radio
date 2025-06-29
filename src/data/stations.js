@@ -63,6 +63,37 @@ const stations = [
     name: "Radio Paradise",
     streamUrl: "https://stream.radioparadise.com/aac-320",
     genre: "Opuštajuća muzika"
+  },
+  // === Italijanske stanice ===
+  {
+    name: "RAI Radio 1",
+    streamUrl: "https://icestreaming.rai.it/1.mp3",
+    genre: "Italijanska muzika"
+  },
+  {
+    name: "RAI Radio 2",
+    streamUrl: "https://icestreaming.rai.it/2.mp3",
+    genre: "Italijanska muzika"
+  },
+  {
+    name: "RAI Radio 3",
+    streamUrl: "https://icestreaming.rai.it/3.mp3",
+    genre: "Italijanska muzika"
+  },
+  {
+    name: "Virgin Rock 70",
+    streamUrl: "https://icy.unitedradio.it/VirginRock70.mp3",
+    genre: "Italijanska muzika"
+  },
+  {
+    name: "Venice Classic Radio",
+    streamUrl: "https://uk2.streamingpulse.com/ssl/vcr2",
+    genre: "Italijanska muzika"
+  },
+  {
+    name: "Radio Kiss Kiss Italia",
+    streamUrl: "https://kisskiss.fluidstream.eu/KKItalia.aac",
+    genre: "Italijanska muzika"
   }
 ]
 
