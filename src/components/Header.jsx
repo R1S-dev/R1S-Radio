@@ -12,7 +12,7 @@ export default function Header({ toggleTheme, openSettings, isDark, toggleFavori
       initial={{ y: -12, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      className={`flex items-center justify-between px-5 py-3 transition-colors duration-500 ${bg} border-b ${border} shadow-sm z-50`}
+      className={`sticky top-0 flex items-center justify-between px-5 py-3 transition-colors duration-500 ${bg} border-b ${border} shadow-sm z-50`}
     >
       {/* Logo i naziv */}
       <div className="flex items-center gap-4">
