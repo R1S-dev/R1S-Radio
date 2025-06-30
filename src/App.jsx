@@ -1,4 +1,3 @@
-// === App.jsx ===
 import React, { useState, useRef, useEffect } from 'react'
 import stations from './data/stations'
 import Header from './components/Header'
@@ -7,7 +6,7 @@ import StationsGrid from './components/StationsGrid'
 import PlayerBar from './components/PlayerBar'
 import SettingsModal from './components/SettingsModal'
 import LoadingScreen from './components/LoadingScreen'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, LayoutGroup } from 'framer-motion'
 
 export default function App() {
   const [loading, setLoading] = useState(true)
@@ -22,7 +21,13 @@ export default function App() {
   const [isDark, setIsDark] = useState(() => localStorage.getItem('theme') === 'dark')
   const [selectedGenre, setSelectedGenre] = useState('')
   const [listeningStart, setListeningStart] = useState(null)
+  const [stationOrder, setStationOrder] = useState(() => {
+    const stored = localStorage.getItem('stationOrder')
+    return stored ? JSON.parse(stored) : []
+  })
+
   const audioRef = useRef(new Audio())
+  const scrollRef = useRef()
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 2000)
@@ -63,6 +68,12 @@ export default function App() {
     localStorage.setItem('listeningStats', JSON.stringify(stats))
   }
 
+  const updateStationOrder = (stationList) => {
+    const order = stationList.map((s) => s.name)
+    setStationOrder(order)
+    localStorage.setItem('stationOrder', JSON.stringify(order))
+  }
+
   const handlePlay = (station) => {
     const audio = audioRef.current
 
@@ -70,6 +81,16 @@ export default function App() {
       saveListeningStats(currentStation?.name)
       setCurrentStation(station)
       audio.src = station.streamUrl
+
+      const reordered = [station, ...stations.filter((s) => s.name !== station.name)]
+      updateStationOrder(reordered)
+
+      setTimeout(() => {
+        const topCard = document.getElementById(`card-${station.name}`)
+        if (topCard) {
+          topCard.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+      }, 300)
     }
 
     audio.play().then(() => {
@@ -105,12 +126,31 @@ export default function App() {
 
   const genres = Array.from(new Set(stations.map((s) => s.genre).filter(Boolean)))
 
-  const filteredStations = stations.filter((station) => {
-    const matchesSearch = station.name.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesGenre = selectedGenre ? station.genre === selectedGenre : true
-    const isFavorite = favorites.some((fav) => fav.name === station.name)
-    return showFavoritesOnly ? matchesSearch && matchesGenre && isFavorite : matchesSearch && matchesGenre
-  })
+  const filteredStations = (() => {
+    const stats = JSON.parse(localStorage.getItem('listeningStats') || '{}')
+
+    let result = stations.filter((station) => {
+      const matchesSearch = station.name.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesGenre = selectedGenre ? station.genre === selectedGenre : true
+      const isFavorite = favorites.some((fav) => fav.name === station.name)
+      return showFavoritesOnly ? matchesSearch && matchesGenre && isFavorite : matchesSearch && matchesGenre
+    })
+
+    result.sort((a, b) => {
+      const indexA = stationOrder.indexOf(a.name)
+      const indexB = stationOrder.indexOf(b.name)
+      if (indexA === -1 && indexB === -1) return 0
+      if (indexA === -1) return 1
+      if (indexB === -1) return -1
+      return indexA - indexB
+    })
+
+    if (currentStation) {
+      result = [currentStation, ...result.filter((s) => s.name !== currentStation.name)]
+    }
+
+    return result
+  })()
 
   if (loading) {
     return <LoadingScreen isDark={isDark} />
@@ -149,19 +189,22 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        <motion.div
-          layout
-          transition={{ layout: { duration: 0.4, ease: 'easeInOut' } }}
-          className="transition-all duration-500 ease-in-out"
-        >
-          <StationsGrid
-            stations={filteredStations}
-            currentStation={currentStation}
-            favorites={favorites}
-            onPlay={handlePlay}
-            onToggleFavorite={toggleFavorite}
-          />
-        </motion.div>
+        <LayoutGroup>
+          <motion.div
+            layout
+            ref={scrollRef}
+            transition={{ layout: { duration: 0.4, ease: 'easeInOut' } }}
+            className="transition-all duration-500 ease-in-out"
+          >
+            <StationsGrid
+              stations={filteredStations}
+              currentStation={currentStation}
+              favorites={favorites}
+              onPlay={handlePlay}
+              onToggleFavorite={toggleFavorite}
+            />
+          </motion.div>
+        </LayoutGroup>
       </main>
 
       {currentStation && (
@@ -180,4 +223,4 @@ export default function App() {
       />
     </div>
   )
-} // kraj App
+}

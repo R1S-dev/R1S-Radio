@@ -94,6 +94,16 @@ const stations = [
     name: "Radio Kiss Kiss Italia",
     streamUrl: "https://kisskiss.fluidstream.eu/KKItalia.aac",
     genre: "Italijanska muzika"
+  },  
+  {
+    name: "Hit FM (nova)",
+    streamUrl: "https://streaming.hitfm.rs/hit.mp3",
+    genre: "Narodna muzika"
+  },
+  {
+    name: "OK Radio",
+    streamUrl: "https://sslstream.okradio.net/;*.mp3",
+    genre: "Narodna muzika"
   }
 ]
 

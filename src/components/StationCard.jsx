@@ -12,6 +12,8 @@ export default function StationCard({
 }) {
   return (
     <motion.div
+      layout
+      layoutId={`station-${station.name}`}
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 10, scale: 0.9 }}
@@ -20,7 +22,6 @@ export default function StationCard({
         'relative bg-white dark:bg-zinc-900 rounded-2xl p-5 shadow-md border border-zinc-200 dark:border-zinc-800 transition-all duration-300 ease-in-out hover:shadow-lg hover:scale-[1.02]'
       )}
     >
-      {/* Zvezdica */}
       <motion.button
         whileTap={{ scale: 0.9 }}
         onClick={() => onToggleFavorite(station)}

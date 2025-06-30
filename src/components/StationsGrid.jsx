@@ -9,14 +9,11 @@ export default function StationsGrid({ stations, currentStation, favorites, onPl
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      layout
       className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 transition-all"
     >
-      <AnimatePresence mode="sync">
-        {stations.map((station, index) => (
+      <AnimatePresence initial={false}>
+        {stations.map((station) => (
           <StationCard
             key={station.name}
             station={station}
