@@ -165,9 +165,9 @@ export default function App() {
   if (loading) return <LoadingScreen isDark={isDark} />
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-500">
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-500 relative">
       {/* Safe area top background for iOS island */}
-      <div className="h-[env(safe-area-inset-top)] bg-white dark:bg-black" />
+      <div className="fixed top-0 left-0 w-full h-[env(safe-area-inset-top)] z-[9999] bg-white dark:bg-black" />
 
       <Header
         openSettings={() => setSettingsOpen(true)}
