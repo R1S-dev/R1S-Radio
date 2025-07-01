@@ -165,7 +165,7 @@ export default function App() {
   if (loading) return <LoadingScreen isDark={isDark} />
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white pt-[env(safe-area-inset-top)] transition-colors duration-500">
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-500">
       <Header
         openSettings={() => setSettingsOpen(true)}
         isDark={isDark}
