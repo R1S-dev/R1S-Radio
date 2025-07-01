@@ -1,4 +1,3 @@
-// === File: src/App.jsx ===
 import React, { useState, useRef, useEffect } from 'react'
 import stations from './data/stations'
 import Header from './components/Header'
@@ -11,7 +10,7 @@ import UpdateModal from './components/UpdateModal'
 import { AnimatePresence, motion, LayoutGroup } from 'framer-motion'
 
 export default function App() {
-  const APP_VERSION = '1.3.3'
+  const APP_VERSION = '1.3.5'
 
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -27,10 +26,9 @@ export default function App() {
   const [updateModalOpen, setUpdateModalOpen] = useState(false)
 
   const audioRef = useRef(new Audio())
-  const scrollRef = useRef()
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000)
+    const timer = setTimeout(() => setLoading(false), 1000)
     return () => clearTimeout(timer)
   }, [])
 
@@ -99,7 +97,7 @@ export default function App() {
       setTimeout(() => {
         const topCard = document.getElementById(`card-${station.name}`)
         if (topCard) topCard.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      }, 300)
+      }, 100)
     }
 
     audio.play().then(() => setListeningStart(Date.now())).catch(() => {})
@@ -157,7 +155,6 @@ export default function App() {
       return matchesSearch && matchesGenre
     })
 
-    // Sortiranje samo ako nije recent
     if (!showRecentsOnly) {
       result.sort((a, b) => a.name.localeCompare(b.name))
     }
@@ -168,7 +165,7 @@ export default function App() {
   if (loading) return <LoadingScreen isDark={isDark} />
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-500 ease-in-out pt-[env(safe-area-inset-top)]">
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white pt-[env(safe-area-inset-top)] transition-colors duration-500">
       <Header
         openSettings={() => setSettingsOpen(true)}
         isDark={isDark}
@@ -184,16 +181,16 @@ export default function App() {
         }}
       />
 
-      <main className="px-4 pt-6 pb-36">
+      <main className="px-4 pt-4 pb-36">
         <AnimatePresence mode="wait" initial={false}>
           {!showFavoritesOnly && !showRecentsOnly && (
             <motion.div
               key="search-bar"
-              initial={{ opacity: 0, scaleY: 0 }}
-              animate={{ opacity: 1, scaleY: 1 }}
-              exit={{ opacity: 0, scaleY: 0 }}
-              transition={{ duration: 0.4, ease: 'easeInOut' }}
-              className="origin-top overflow-hidden"
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="overflow-hidden mb-4"
             >
               <SearchAndFilterBar
                 searchTerm={searchTerm}
@@ -210,8 +207,7 @@ export default function App() {
         <LayoutGroup>
           <motion.div
             layout
-            ref={scrollRef}
-            transition={{ layout: { duration: 0.4, ease: 'easeInOut' } }}
+            transition={{ layout: { duration: 0.35, ease: 'easeOut' } }}
             className="transition-all duration-500 ease-in-out"
           >
             <StationsGrid

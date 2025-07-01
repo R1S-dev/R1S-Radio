@@ -17,14 +17,17 @@
     <!-- iOS support -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="R1S Radio" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
 
     <!-- Android theme -->
     <meta name="theme-color" content="#000000" />
     <meta name="mobile-web-app-capable" content="yes" />
   </head>
-  <body class="bg-white dark:bg-black text-black dark:text-white">
+  <body
+    class="bg-white dark:bg-black text-black dark:text-white m-0 p-0"
+    style="padding-top: env(safe-area-inset-top);"
+  >
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

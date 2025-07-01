@@ -1,6 +1,6 @@
 import React from 'react'
 import { Settings, Heart, History } from 'lucide-react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 export default function Header({
   openSettings,
@@ -20,7 +20,7 @@ export default function Header({
       initial={{ y: -12, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      className={`sticky top-0 flex items-center justify-between px-5 py-3 transition-colors duration-500 ${bg} border-b ${border} shadow-sm z-50`}
+      className={`sticky top-0 z-50 px-5 py-4 flex items-center justify-between transition-colors duration-500 ${bg} border-b ${border} shadow-sm`}
     >
       {/* Logo i naziv */}
       <div className="flex items-center gap-4 cursor-pointer" onClick={onResetFilters}>
@@ -28,7 +28,7 @@ export default function Header({
           key={isDark ? 'logo-dark' : 'logo-light'}
           src={isDark ? '/logo.png' : '/logo-light.png'}
           alt="R1S Radio"
-          className="w-14 h-14 object-contain max-h-[56px] transition-all duration-500"
+          className="w-14 h-14 object-contain transition-all duration-500"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
@@ -38,7 +38,6 @@ export default function Header({
 
       {/* Akcije */}
       <div className="flex items-center gap-3">
-        {/* Favorites */}
         <motion.button
           onClick={toggleFavorites}
           whileTap={{ scale: 0.9 }}
@@ -64,7 +63,6 @@ export default function Header({
           />
         </motion.button>
 
-        {/* Recent */}
         <motion.button
           onClick={toggleRecents}
           whileTap={{ scale: 0.9 }}
@@ -89,7 +87,6 @@ export default function Header({
           />
         </motion.button>
 
-        {/* Podešavanja */}
         <motion.button
           onClick={openSettings}
           whileTap={{ scale: 0.9 }}
