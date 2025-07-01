@@ -7,4 +7,12 @@ body {
   transition: background-color 0.3s, color 0.3s;
   padding-top: env(safe-area-inset-top);
   min-height: 100vh;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
