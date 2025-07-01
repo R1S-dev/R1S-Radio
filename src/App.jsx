@@ -1,3 +1,4 @@
+// === File: src/App.jsx ===
 import React, { useState, useRef, useEffect } from 'react'
 import stations from './data/stations'
 import Header from './components/Header'
@@ -6,9 +7,12 @@ import StationsGrid from './components/StationsGrid'
 import PlayerBar from './components/PlayerBar'
 import SettingsModal from './components/SettingsModal'
 import LoadingScreen from './components/LoadingScreen'
-import { AnimatePresence, motion } from 'framer-motion'
+import UpdateModal from './components/UpdateModal'
+import { AnimatePresence, motion, LayoutGroup } from 'framer-motion'
 
 export default function App() {
+  const APP_VERSION = '1.3.2'
+
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [currentStation, setCurrentStation] = useState(null)
@@ -20,6 +24,7 @@ export default function App() {
   const [isDark, setIsDark] = useState(() => localStorage.getItem('theme') === 'dark')
   const [selectedGenre, setSelectedGenre] = useState('')
   const [listeningStart, setListeningStart] = useState(null)
+  const [updateModalOpen, setUpdateModalOpen] = useState(false)
 
   const audioRef = useRef(new Audio())
   const scrollRef = useRef()
@@ -55,6 +60,14 @@ export default function App() {
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [currentStation, listeningStart])
+
+  useEffect(() => {
+    const lastSeenVersion = localStorage.getItem('appVersion')
+    if (lastSeenVersion !== APP_VERSION) {
+      setUpdateModalOpen(true)
+      localStorage.setItem('appVersion', APP_VERSION)
+    }
+  }, [])
 
   const saveListeningStats = (stationName) => {
     if (!stationName || !listeningStart) return
@@ -133,24 +146,29 @@ export default function App() {
   const genres = Array.from(new Set(stations.map((s) => s.genre).filter(Boolean)))
 
   const filteredStations = (() => {
+    let baseList = stations
+
+    // Ako je recent tab aktivan, koristi lokalnu listu recent
     if (showRecentsOnly) {
-      return recents.filter((station) => {
-        const matchesSearch = station.name.toLowerCase().includes(searchTerm.toLowerCase())
-        const matchesGenre = selectedGenre ? station.genre === selectedGenre : true
-        return matchesSearch && matchesGenre
-      })
+      baseList = recents
     }
 
-    let result = stations.filter((station) => {
+    let result = baseList.filter((station) => {
       const matchesSearch = station.name.toLowerCase().includes(searchTerm.toLowerCase())
       const matchesGenre = selectedGenre ? station.genre === selectedGenre : true
       const isFavorite = favorites.some((fav) => fav.name === station.name)
+      const isRecent = recents.some((r) => r.name === station.name)
 
       if (showFavoritesOnly) return matchesSearch && matchesGenre && isFavorite
+      if (showRecentsOnly) return matchesSearch && matchesGenre
       return matchesSearch && matchesGenre
     })
 
-    result.sort((a, b) => a.name.localeCompare(b.name))
+    // Sortiranje
+    if (!showRecentsOnly) {
+      result.sort((a, b) => a.name.localeCompare(b.name))
+    }
+
     return result
   })()
 
@@ -196,15 +214,22 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        <div ref={scrollRef} className="transition-all duration-500 ease-in-out">
-          <StationsGrid
-            stations={filteredStations}
-            currentStation={currentStation}
-            favorites={favorites}
-            onPlay={handlePlay}
-            onToggleFavorite={toggleFavorite}
-          />
-        </div>
+        <LayoutGroup>
+          <motion.div
+            layout
+            ref={scrollRef}
+            transition={{ layout: { duration: 0.4, ease: 'easeInOut' } }}
+            className="transition-all duration-500 ease-in-out"
+          >
+            <StationsGrid
+              stations={filteredStations}
+              currentStation={currentStation}
+              favorites={favorites}
+              onPlay={handlePlay}
+              onToggleFavorite={toggleFavorite}
+            />
+          </motion.div>
+        </LayoutGroup>
       </main>
 
       {currentStation && (
@@ -221,6 +246,13 @@ export default function App() {
         onClose={() => setSettingsOpen(false)}
         isDark={isDark}
         toggleTheme={() => setIsDark(!isDark)}
+        version={APP_VERSION}
+      />
+
+      <UpdateModal
+        isOpen={updateModalOpen}
+        onClose={() => setUpdateModalOpen(false)}
+        version={APP_VERSION}
       />
     </div>
   )

@@ -1,3 +1,4 @@
+// === File: src/components/SettingsModal.jsx ===
 import React, { useRef, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -10,7 +11,7 @@ import {
   Palette
 } from 'lucide-react'
 
-export default function SettingsModal({ isOpen, onClose, isDark, toggleTheme }) {
+export default function SettingsModal({ isOpen, onClose, isDark, toggleTheme, version }) {
   const overlayRef = useRef(null)
   const [stats, setStats] = useState({})
 
@@ -124,7 +125,7 @@ export default function SettingsModal({ isOpen, onClose, isDark, toggleTheme }) 
 
             <div className="mt-4 text-center text-xs text-zinc-500 dark:text-zinc-400">
               <div className="flex items-center justify-center gap-1">
-                <Info size={14} /> Verzija aplikacije: <span className="font-medium">1.3.0</span>
+                <Info size={14} /> Verzija aplikacije: <span className="font-medium">{version}</span>
               </div>
             </div>
           </motion.div>
