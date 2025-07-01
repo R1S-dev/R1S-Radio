@@ -1,8 +1,16 @@
 import React from 'react'
-import { Settings, Sun, Moon, Heart } from 'lucide-react'
+import { Settings, Heart, History } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 
-export default function Header({ toggleTheme, openSettings, isDark, toggleFavorites, showFavoritesOnly }) {
+export default function Header({
+  openSettings,
+  isDark,
+  toggleFavorites,
+  showFavoritesOnly,
+  toggleRecents,
+  showRecentsOnly,
+  onResetFilters
+}) {
   const iconColor = isDark ? 'text-red-500' : 'text-blue-500'
   const bg = isDark ? 'bg-zinc-900' : 'bg-white'
   const border = isDark ? 'border-zinc-700' : 'border-zinc-200'
@@ -15,7 +23,7 @@ export default function Header({ toggleTheme, openSettings, isDark, toggleFavori
       className={`sticky top-0 flex items-center justify-between px-5 py-3 transition-colors duration-500 ${bg} border-b ${border} shadow-sm z-50`}
     >
       {/* Logo i naziv */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 cursor-pointer" onClick={onResetFilters}>
         <motion.img
           key={isDark ? 'logo-dark' : 'logo-light'}
           src={isDark ? '/logo.png' : '/logo-light.png'}
@@ -30,7 +38,7 @@ export default function Header({ toggleTheme, openSettings, isDark, toggleFavori
 
       {/* Akcije */}
       <div className="flex items-center gap-3">
-        {/* Favorites toggle */}
+        {/* Favorites */}
         <motion.button
           onClick={toggleFavorites}
           whileTap={{ scale: 0.9 }}
@@ -56,39 +64,29 @@ export default function Header({ toggleTheme, openSettings, isDark, toggleFavori
           />
         </motion.button>
 
-        {/* Tema toggle */}
+        {/* Recent */}
         <motion.button
-          key={isDark ? 'sun' : 'moon'}
-          onClick={toggleTheme}
-          initial={{ rotate: 180, scale: 0.8, opacity: 0 }}
-          animate={{ rotate: 0, scale: 1, opacity: 1 }}
-          transition={{ duration: 0.4, ease: 'easeInOut' }}
-          className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center hover:scale-110 transition-all"
-          aria-label="Promeni temu"
+          onClick={toggleRecents}
+          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.1 }}
+          className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+            showRecentsOnly
+              ? isDark
+                ? 'bg-red-700 text-white'
+                : 'bg-blue-100 text-blue-600'
+              : 'bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600'
+          }`}
+          aria-label="Poslednje slušano"
         >
-          <AnimatePresence mode="wait" initial={false}>
-            {isDark ? (
-              <motion.div
-                key="sun"
-                initial={{ rotate: 90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: -90, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Sun className={`size-5 ${iconColor}`} />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="moon"
-                initial={{ rotate: -90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 90, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Moon className={`size-5 ${iconColor}`} />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <History
+            className={`size-5 transition ${
+              showRecentsOnly
+                ? isDark
+                  ? 'text-white'
+                  : 'text-blue-600'
+                : iconColor
+            }`}
+          />
         </motion.button>
 
         {/* Podešavanja */}

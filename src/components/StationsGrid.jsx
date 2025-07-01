@@ -1,6 +1,6 @@
 import React from 'react'
 import StationCard from './StationCard'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 
 export default function StationsGrid({ stations, currentStation, favorites, onPlay, onToggleFavorite }) {
   if (stations.length === 0) {
@@ -8,10 +8,7 @@ export default function StationsGrid({ stations, currentStation, favorites, onPl
   }
 
   return (
-    <motion.div
-      layout
-      className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 transition-all"
-    >
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 transition-all">
       <AnimatePresence initial={false}>
         {stations.map((station) => (
           <StationCard
@@ -24,6 +21,6 @@ export default function StationsGrid({ stations, currentStation, favorites, onPl
           />
         ))}
       </AnimatePresence>
-    </motion.div>
+    </div>
   )
 }

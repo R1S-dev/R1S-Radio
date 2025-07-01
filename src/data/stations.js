@@ -12,7 +12,7 @@ const stations = [
   {
     name: "Radio S3",
     streamUrl: "https://stream.radios.rs:9004/;*.mp3",
-    genre: "Narodna muzika"
+    genre: "Hitovi"
   },
   {
     name: "Play Radio",
@@ -95,11 +95,6 @@ const stations = [
     streamUrl: "https://kisskiss.fluidstream.eu/KKItalia.aac",
     genre: "Italijanska muzika"
   },  
-  {
-    name: "Hit FM (nova)",
-    streamUrl: "https://streaming.hitfm.rs/hit.mp3",
-    genre: "Narodna muzika"
-  },
   {
     name: "OK Radio",
     streamUrl: "https://sslstream.okradio.net/;*.mp3",

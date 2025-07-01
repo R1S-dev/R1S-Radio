@@ -14,12 +14,12 @@ export default function StationCard({
     <motion.div
       layout
       layoutId={`station-${station.name}`}
-      initial={{ opacity: 0, y: 20, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 10, scale: 0.9 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 10 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
       className={clsx(
-        'relative bg-white dark:bg-zinc-900 rounded-2xl p-5 shadow-md border border-zinc-200 dark:border-zinc-800 transition-all duration-300 ease-in-out hover:shadow-lg hover:scale-[1.02]'
+        'relative bg-white dark:bg-zinc-900 rounded-2xl p-5 shadow-md border border-zinc-200 dark:border-zinc-800 transition-all duration-300 ease-in-out hover:shadow-lg'
       )}
     >
       <motion.button
@@ -58,9 +58,9 @@ export default function StationCard({
           {isCurrent ? (
             <motion.div
               key="waves"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
               <Waves size={18} />
@@ -68,9 +68,9 @@ export default function StationCard({
           ) : (
             <motion.div
               key="play"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
               <Play size={18} />

@@ -6,25 +6,20 @@ import StationsGrid from './components/StationsGrid'
 import PlayerBar from './components/PlayerBar'
 import SettingsModal from './components/SettingsModal'
 import LoadingScreen from './components/LoadingScreen'
-import { AnimatePresence, motion, LayoutGroup } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export default function App() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [currentStation, setCurrentStation] = useState(null)
-  const [favorites, setFavorites] = useState(() => {
-    const stored = localStorage.getItem('favorites')
-    return stored ? JSON.parse(stored) : []
-  })
+  const [favorites, setFavorites] = useState(() => JSON.parse(localStorage.getItem('favorites') || '[]'))
+  const [recents, setRecents] = useState(() => JSON.parse(localStorage.getItem('recents') || '[]'))
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
+  const [showRecentsOnly, setShowRecentsOnly] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [isDark, setIsDark] = useState(() => localStorage.getItem('theme') === 'dark')
   const [selectedGenre, setSelectedGenre] = useState('')
   const [listeningStart, setListeningStart] = useState(null)
-  const [stationOrder, setStationOrder] = useState(() => {
-    const stored = localStorage.getItem('stationOrder')
-    return stored ? JSON.parse(stored) : []
-  })
 
   const audioRef = useRef(new Audio())
   const scrollRef = useRef()
@@ -44,6 +39,10 @@ export default function App() {
   }, [favorites])
 
   useEffect(() => {
+    localStorage.setItem('recents', JSON.stringify(recents))
+  }, [recents])
+
+  useEffect(() => {
     const handleBeforeUnload = () => {
       if (currentStation && listeningStart) {
         const duration = Math.floor((Date.now() - listeningStart) / 1000)
@@ -54,9 +53,7 @@ export default function App() {
       }
     }
     window.addEventListener('beforeunload', handleBeforeUnload)
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-    }
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [currentStation, listeningStart])
 
   const saveListeningStats = (stationName) => {
@@ -68,10 +65,12 @@ export default function App() {
     localStorage.setItem('listeningStats', JSON.stringify(stats))
   }
 
-  const updateStationOrder = (stationList) => {
-    const order = stationList.map((s) => s.name)
-    setStationOrder(order)
-    localStorage.setItem('stationOrder', JSON.stringify(order))
+  const updateRecents = (station) => {
+    setRecents((prev) => {
+      const existing = prev.filter((s) => s.name !== station.name)
+      const updated = [station, ...existing].slice(0, 6)
+      return updated
+    })
   }
 
   const handlePlay = (station) => {
@@ -82,22 +81,15 @@ export default function App() {
       setCurrentStation(station)
       audio.src = station.streamUrl
 
-      const reordered = [station, ...stations.filter((s) => s.name !== station.name)]
-      updateStationOrder(reordered)
+      updateRecents(station)
 
       setTimeout(() => {
         const topCard = document.getElementById(`card-${station.name}`)
-        if (topCard) {
-          topCard.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        }
+        if (topCard) topCard.scrollIntoView({ behavior: 'smooth', block: 'center' })
       }, 300)
     }
 
-    audio.play().then(() => {
-      setListeningStart(Date.now())
-    }).catch((err) => {
-      console.warn('Greška pri puštanju:', err.message)
-    })
+    audio.play().then(() => setListeningStart(Date.now())).catch(() => {})
   }
 
   const handlePause = () => {
@@ -107,10 +99,11 @@ export default function App() {
   }
 
   const toggleFavorite = (station) => {
-    setFavorites((prev) => {
-      const exists = prev.find((fav) => fav.name === station.name)
-      return exists ? prev.filter((fav) => fav.name !== station.name) : [...prev, station]
-    })
+    setFavorites((prev) =>
+      prev.some((fav) => fav.name === station.name)
+        ? prev.filter((fav) => fav.name !== station.name)
+        : [...prev, station]
+    )
   }
 
   const toggleFavorites = () => {
@@ -119,6 +112,19 @@ export default function App() {
       if (next) {
         setSearchTerm('')
         setSelectedGenre('')
+        setShowRecentsOnly(false)
+      }
+      return next
+    })
+  }
+
+  const toggleRecents = () => {
+    setShowRecentsOnly((prev) => {
+      const next = !prev
+      if (next) {
+        setSearchTerm('')
+        setSelectedGenre('')
+        setShowFavoritesOnly(false)
       }
       return next
     })
@@ -127,48 +133,49 @@ export default function App() {
   const genres = Array.from(new Set(stations.map((s) => s.genre).filter(Boolean)))
 
   const filteredStations = (() => {
-    const stats = JSON.parse(localStorage.getItem('listeningStats') || '{}')
+    if (showRecentsOnly) {
+      return recents.filter((station) => {
+        const matchesSearch = station.name.toLowerCase().includes(searchTerm.toLowerCase())
+        const matchesGenre = selectedGenre ? station.genre === selectedGenre : true
+        return matchesSearch && matchesGenre
+      })
+    }
 
     let result = stations.filter((station) => {
       const matchesSearch = station.name.toLowerCase().includes(searchTerm.toLowerCase())
       const matchesGenre = selectedGenre ? station.genre === selectedGenre : true
       const isFavorite = favorites.some((fav) => fav.name === station.name)
-      return showFavoritesOnly ? matchesSearch && matchesGenre && isFavorite : matchesSearch && matchesGenre
+
+      if (showFavoritesOnly) return matchesSearch && matchesGenre && isFavorite
+      return matchesSearch && matchesGenre
     })
 
-    result.sort((a, b) => {
-      const indexA = stationOrder.indexOf(a.name)
-      const indexB = stationOrder.indexOf(b.name)
-      if (indexA === -1 && indexB === -1) return 0
-      if (indexA === -1) return 1
-      if (indexB === -1) return -1
-      return indexA - indexB
-    })
-
-    if (currentStation) {
-      result = [currentStation, ...result.filter((s) => s.name !== currentStation.name)]
-    }
-
+    result.sort((a, b) => a.name.localeCompare(b.name))
     return result
   })()
 
-  if (loading) {
-    return <LoadingScreen isDark={isDark} />
-  }
+  if (loading) return <LoadingScreen isDark={isDark} />
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-500 ease-in-out">
       <Header
-        toggleTheme={() => setIsDark(!isDark)}
         openSettings={() => setSettingsOpen(true)}
         isDark={isDark}
         toggleFavorites={toggleFavorites}
         showFavoritesOnly={showFavoritesOnly}
+        toggleRecents={toggleRecents}
+        showRecentsOnly={showRecentsOnly}
+        onResetFilters={() => {
+          setSearchTerm('')
+          setSelectedGenre('')
+          setShowFavoritesOnly(false)
+          setShowRecentsOnly(false)
+        }}
       />
 
       <main className="px-4 pt-6 pb-36">
         <AnimatePresence mode="wait" initial={false}>
-          {!showFavoritesOnly && (
+          {!showFavoritesOnly && !showRecentsOnly && (
             <motion.div
               key="search-bar"
               initial={{ opacity: 0, scaleY: 0 }}
@@ -189,22 +196,15 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        <LayoutGroup>
-          <motion.div
-            layout
-            ref={scrollRef}
-            transition={{ layout: { duration: 0.4, ease: 'easeInOut' } }}
-            className="transition-all duration-500 ease-in-out"
-          >
-            <StationsGrid
-              stations={filteredStations}
-              currentStation={currentStation}
-              favorites={favorites}
-              onPlay={handlePlay}
-              onToggleFavorite={toggleFavorite}
-            />
-          </motion.div>
-        </LayoutGroup>
+        <div ref={scrollRef} className="transition-all duration-500 ease-in-out">
+          <StationsGrid
+            stations={filteredStations}
+            currentStation={currentStation}
+            favorites={favorites}
+            onPlay={handlePlay}
+            onToggleFavorite={toggleFavorite}
+          />
+        </div>
       </main>
 
       {currentStation && (
@@ -220,6 +220,7 @@ export default function App() {
         isOpen={settingsOpen}
         onClose={() => setSettingsOpen(false)}
         isDark={isDark}
+        toggleTheme={() => setIsDark(!isDark)}
       />
     </div>
   )
