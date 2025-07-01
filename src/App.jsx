@@ -166,6 +166,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-500">
+      {/* Safe area top background for iOS island */}
+      <div className="h-[env(safe-area-inset-top)] bg-white dark:bg-black" />
+
       <Header
         openSettings={() => setSettingsOpen(true)}
         isDark={isDark}
