@@ -1,4 +1,3 @@
-// === File: src/components/UpdateModal.jsx ===
 import React, { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, BadgeInfo, Sparkles } from 'lucide-react'
@@ -69,11 +68,14 @@ export default function UpdateModal({ isOpen, onClose, version }) {
             />
 
             <h2 className="text-xl font-bold mb-3 text-zinc-800 dark:text-white">Šta je novo u aplikaciji?</h2>
+
             <div className="text-sm text-zinc-600 dark:text-zinc-300 mb-6 leading-relaxed text-left">
               <ul className="list-disc list-inside space-y-1">
-                <li>Poboljšanja u Settings panelu</li>
-                <li>Dodat "Recent" tab</li>
-                <li>Animacije unapređene i optimizovane</li>
+                <li>Dodat "Recent" tab sa prikazom poslednje slušanih</li>
+                <li>Recent tab prikazuje najnovije na vrhu</li>
+                <li>Bolje ponašanje na iOS PWA + support za Safe Area</li>
+                <li>Animacije kartica poboljšane i ne razvlače se više</li>
+                <li>Logo unutar update modala je sada bez ivica i veći</li>
               </ul>
             </div>
 

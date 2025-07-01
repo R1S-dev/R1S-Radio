@@ -11,7 +11,7 @@ import UpdateModal from './components/UpdateModal'
 import { AnimatePresence, motion, LayoutGroup } from 'framer-motion'
 
 export default function App() {
-  const APP_VERSION = '1.3.2'
+  const APP_VERSION = '1.3.3'
 
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -146,25 +146,18 @@ export default function App() {
   const genres = Array.from(new Set(stations.map((s) => s.genre).filter(Boolean)))
 
   const filteredStations = (() => {
-    let baseList = stations
-
-    // Ako je recent tab aktivan, koristi lokalnu listu recent
-    if (showRecentsOnly) {
-      baseList = recents
-    }
+    let baseList = showRecentsOnly ? recents : stations
 
     let result = baseList.filter((station) => {
       const matchesSearch = station.name.toLowerCase().includes(searchTerm.toLowerCase())
       const matchesGenre = selectedGenre ? station.genre === selectedGenre : true
       const isFavorite = favorites.some((fav) => fav.name === station.name)
-      const isRecent = recents.some((r) => r.name === station.name)
 
       if (showFavoritesOnly) return matchesSearch && matchesGenre && isFavorite
-      if (showRecentsOnly) return matchesSearch && matchesGenre
       return matchesSearch && matchesGenre
     })
 
-    // Sortiranje
+    // Sortiranje samo ako nije recent
     if (!showRecentsOnly) {
       result.sort((a, b) => a.name.localeCompare(b.name))
     }
@@ -175,7 +168,7 @@ export default function App() {
   if (loading) return <LoadingScreen isDark={isDark} />
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-500 ease-in-out">
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-500 ease-in-out pt-[env(safe-area-inset-top)]">
       <Header
         openSettings={() => setSettingsOpen(true)}
         isDark={isDark}
