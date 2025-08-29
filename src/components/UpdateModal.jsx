@@ -71,11 +71,11 @@ export default function UpdateModal({ isOpen, onClose, version }) {
 
             <div className="text-sm text-zinc-600 dark:text-zinc-300 mb-6 leading-relaxed text-left">
               <ul className="list-disc list-inside space-y-1">
-                <li>Dodat "Recent" tab sa prikazom poslednje slušanih</li>
-                <li>Recent tab prikazuje najnovije na vrhu</li>
-                <li>Bolje ponašanje na iOS PWA + support za Safe Area</li>
-                <li>Animacije kartica poboljšane i ne razvlače se više</li>
-                <li>Logo unutar update modala je sada bez ivica i veći</li>
+                <li>Dodata 2 nova italijanska radija:</li>
+                <ul className="list-disc list-inside pl-5 space-y-1">
+                  <li>Radio Italia Uno</li>
+                  <li>Radio Italia Trend</li>
+                </ul>
               </ul>
             </div>
 
