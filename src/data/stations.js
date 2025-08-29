@@ -66,6 +66,11 @@ const stations = [
   },
   // === Italijanske stanice ===
   {
+    name: "Radio Italia",
+    streamUrl: "https://radioitaliasmi.akamaized.net/hls/live/2093120/RISMI/stream01/streamPlaylist.m3u8",
+    genre: "Italijanska muzika"
+  },
+  {
     name: "RAI Radio 1",
     streamUrl: "https://icestreaming.rai.it/1.mp3",
     genre: "Italijanska muzika"
