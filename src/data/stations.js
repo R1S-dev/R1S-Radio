@@ -66,8 +66,8 @@ const stations = [
   },
   // === Italijanske stanice ===
   {
-    name: "Radio Italia",
-    streamUrl: "mms://radioitalia.wm.p1.str3.com/rditaliahq",
+    name: "Radio Italia Trend",
+    streamUrl: "https://stream4.xdevel.com/audio0s976608-1379/stream/icecast.audio",
     genre: "Italijanska muzika"
   },
   {
