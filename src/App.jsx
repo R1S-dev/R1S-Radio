@@ -10,7 +10,7 @@ import UpdateModal from './components/UpdateModal'
 import { AnimatePresence, motion, LayoutGroup } from 'framer-motion'
 
 export default function App() {
-  const APP_VERSION = '1.3.5'
+  const APP_VERSION = '1.3.6'
 
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
