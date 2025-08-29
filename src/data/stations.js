@@ -67,7 +67,7 @@ const stations = [
   // === Italijanske stanice ===
   {
     name: "Radio Italia",
-    streamUrl: "https://radioitaliasmi.akamaized.net/hls/live/2093120/RISMI/stream01/streamPlaylist.m3u8",
+    streamUrl: "mms://radioitalia.wm.p1.str3.com/rditaliahq",
     genre: "Italijanska muzika"
   },
   {
