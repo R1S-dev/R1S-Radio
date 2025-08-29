@@ -71,6 +71,11 @@ const stations = [
     genre: "Italijanska muzika"
   },
   {
+    name: "Radio Italia Uno",
+    streamUrl: "https://icecast.top-ix.org/radioitaliauno",
+    genre: "Italijanska muzika"
+  },
+  {
     name: "RAI Radio 1",
     streamUrl: "https://icestreaming.rai.it/1.mp3",
     genre: "Italijanska muzika"
