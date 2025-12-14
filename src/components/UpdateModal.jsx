@@ -67,14 +67,16 @@ export default function UpdateModal({ isOpen, onClose, version }) {
               className="h-20 w-20 mx-auto mb-4 object-contain"
             />
 
-            <h2 className="text-xl font-bold mb-3 text-zinc-800 dark:text-white">Šta je novo u aplikaciji?</h2>
+            <h2 className="text-xl font-bold mb-3 text-zinc-800 dark:text-white">
+              Šta je novo u aplikaciji?
+            </h2>
 
             <div className="text-sm text-zinc-600 dark:text-zinc-300 mb-6 leading-relaxed text-left">
               <ul className="list-disc list-inside space-y-1">
-                <li>Dodata 2 nova italijanska radija:</li>
+                <li>Dodate 2 nove radio stanice:</li>
                 <ul className="list-disc list-inside pl-5 space-y-1">
-                  <li>Radio Italia Uno</li>
-                  <li>Radio Italia Trend</li>
+                  <li>Naxi Mix</li>
+                  <li>Kolubara</li>
                 </ul>
               </ul>
             </div>
