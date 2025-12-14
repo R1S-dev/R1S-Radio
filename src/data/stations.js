@@ -111,6 +111,11 @@ const stations = [
     genre: "Italijanska muzika"
   },  
   {
+    name: "Kolubara",
+    streamUrl: "https://media.radioexs.com/stream/radiokolubara?7217",
+    genre: "Hitovi"
+  }, 
+  {
     name: "OK Radio",
     streamUrl: "https://sslstream.okradio.net/;*.mp3",
     genre: "Narodna muzika"
