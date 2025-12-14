@@ -51,8 +51,13 @@ const stations = [
   },
   {
     name: "Naxi 80-e",
-    streamUrl: "https://naxidigital-80s128ssl.streaming.rs:8042/;*.mp3",
+    streamUrl: "https://naxidigital-mix128ssl.streaming.rs:8222/;stream.nsv",
     genre: "Retro / Ex-YU"
+  },
+  {
+    name: "Naxi Mix",
+    streamUrl: "https://naxidigital-80s128ssl.streaming.rs:8042/;*.mp3",
+    genre: "Hitovi"
   },
   {
     name: "Lola Radio",
