@@ -112,7 +112,7 @@ const stations = [
   },  
   {
     name: "Kolubara",
-    streamUrl: "https://media.radioexs.com/stream/radiokolubara?7217",
+    streamUrl: "https://kolubara.name.ba:8000/stream/1/?4420",
     genre: "Hitovi"
   }, 
   {
